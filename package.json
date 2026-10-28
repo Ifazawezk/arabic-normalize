@@ -1,0 +1,21 @@
+{
+  "name": "arabic-normalize",
+  "version": "0.1.0",
+  "description": "Normalize Arabic text for search and matching: diacritics, alef forms, tatweel, teh marbuta, digits",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "keywords": ["arabic", "normalize", "search", "nlp", "diacritics", "tashkeel"],
+  "author": "Mohaned Elhagar",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.5"
+  }
+}
