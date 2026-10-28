@@ -69,3 +69,5 @@ export function normalize(text: string, options: NormalizeOptions = {}): string 
   if (o.whitespace) s = s.replace(/\s+/g, " ").trim();
   return s;
 }
+
+export { findAll, highlight, includes, type Match } from "./search.js";
