@@ -5,17 +5,33 @@
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "test": "vitest run"
+    "test": "vitest run",
+    "prepublishOnly": "npm run build && npm test"
   },
-  "keywords": ["arabic", "normalize", "search", "nlp", "diacritics", "tashkeel"],
+  "keywords": [
+    "arabic",
+    "normalize",
+    "search",
+    "nlp",
+    "diacritics",
+    "tashkeel"
+  ],
   "author": "Mohaned Elhagar",
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^24.0.0",
     "typescript": "^7.0.2",
     "vitest": "^5.0.5"
+  },
+  "bin": {
+    "arabic-normalize": "dist/cli.js"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }
