@@ -71,3 +71,4 @@ export function normalize(text: string, options: NormalizeOptions = {}): string 
 }
 
 export { findAll, highlight, includes, type Match } from "./search.js";
+export { ARABIC_STOPWORDS, stripArticle, tokenize, type TokenizeOptions } from "./tokens.js";
