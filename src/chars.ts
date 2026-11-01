@@ -10,7 +10,7 @@
  * scripts depend on them.
  */
 export const INVISIBLE =
-  /[\u00AD\u061C\u200B\u200E\u200F\u202A-\u202E\u2060\u2066-\u2069\uFEFF]|(?<=\p{scx=Arabic}\p{M}*)[\u200C\u200D]+|[\u200C\u200D]+(?=\p{scx=Arabic})/gu;
+  /[\u00AD\u061C\u200B\u200E\u200F\u202A-\u202E\u2060\u2066-\u2069\uFEFF]|[\u200C\u200D]+(?:(?<=\p{scx=Arabic}\p{M}*[\u200C\u200D]+)|(?=\p{scx=Arabic}))/gu;
 
 /** Arabic Presentation Forms A and B, which is what text extracted from many PDFs is made of. */
 export const PRESENTATION_FORMS = /[\uFB50-\uFDFF\uFE70-\uFEFC]/g;
