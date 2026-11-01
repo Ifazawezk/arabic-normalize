@@ -10,6 +10,17 @@ const STOPWORDS_RAW = `
 
 export const ARABIC_STOPWORDS: ReadonlySet<string> = new Set(STOPWORDS_RAW.split(/\s+/).filter(Boolean));
 
+// The same words with hamza on waw or yeh folded too, so that هؤلاء is still found when the
+// caller has passed hamza: true.
+const STOPWORD_KEYS: ReadonlySet<string> = new Set(
+  STOPWORDS_RAW.replace(/ؤ/g, "و").replace(/ئ/g, "ي").split(/\s+/).filter(Boolean),
+);
+
+/** Compare in fully normalized form, so turning a step off cannot hide a stop word. */
+function isStopword(token: string): boolean {
+  return STOPWORD_KEYS.has(normalize(token, { hamza: true }));
+}
+
 export interface TokenizeOptions extends NormalizeOptions {
   /** Drop common function words such as في، من، على. Default false. */
   removeStopwords?: boolean;
@@ -19,12 +30,20 @@ export interface TokenizeOptions extends NormalizeOptions {
   minLength?: number;
 }
 
-// و ف ب ك ل can attach before ال; "لل" is ل + ال with the alef dropped.
-// At least 3 letters must remain, so words like الله and الي are left alone.
-const ARTICLE = /^(?:[وف]?[بكل]?ال|[وف]?لل)(?=.{3,})/;
+// و ف ب ك ل can attach before ال; "لل" is ل + ال with the alef dropped. Marks are allowed after
+// every letter, because stripArticle() can be called on text that still has its harakat.
+const ARTICLE = /^(?:[وف]\p{M}*)?(?:[بكل]\p{M}*)?[اٱ]\p{M}*ل\p{M}*|^(?:[وف]\p{M}*)?ل\p{M}*ل\p{M}*/u;
 
+function letterCount(word: string): number {
+  return word.replace(/\p{M}/gu, "").length;
+}
+
+/** Remove the definite article. At least 3 letters must remain, so الله and الي are left alone. */
 export function stripArticle(word: string): string {
-  return word.replace(ARTICLE, "");
+  const article = ARTICLE.exec(word);
+  if (!article) return word;
+  const rest = word.slice(article[0].length);
+  return letterCount(rest) >= 3 ? rest : word;
 }
 
 /**
@@ -35,12 +54,13 @@ export function stripArticle(word: string): string {
  */
 export function tokenize(text: string, options: TokenizeOptions = {}): string[] {
   const { removeStopwords = false, stripArticle: strip = false, minLength = 1, ...norm } = options;
-  const words = normalize(text, norm).toLowerCase().match(/[\p{L}\p{N}]+/gu) ?? [];
+  // Marks stay inside a word, which matters when the caller keeps diacritics.
+  const words = normalize(text, norm).toLowerCase().match(/[\p{L}\p{N}][\p{L}\p{M}\p{N}]*/gu) ?? [];
   const out: string[] = [];
   for (let w of words) {
-    if (removeStopwords && ARABIC_STOPWORDS.has(w)) continue;
+    if (removeStopwords && isStopword(w)) continue;
     if (strip) w = stripArticle(w);
-    if (w.length >= minLength) out.push(w);
+    if (letterCount(w) >= minLength) out.push(w);
   }
   return out;
 }
