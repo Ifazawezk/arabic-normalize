@@ -18,6 +18,10 @@ Normalizes Arabic text line by line. Reads stdin when no file is given.
   --keep-teh-marbuta    keep ة instead of turning it into ه
   --keep-alef-maqsura   keep ى instead of turning it into ي
   --keep-digits         keep Arabic-Indic digits
+  --keep-lookalikes     keep Persian and Urdu letters such as ک and ی
+  --keep-invisible      keep RLM, ZWNJ, soft hyphens and other invisible characters
+  --keep-presentation-forms
+                        keep presentation forms and ligatures such as ﻻ and ﷲ
   --hamza               also turn ؤ into و and ئ into ي
   --tokens              print one token per line instead of normalized lines
   --no-stopwords        with --tokens: drop common function words
@@ -31,6 +35,9 @@ const { values, positionals } = parseArgs({
     "keep-teh-marbuta": { type: "boolean" },
     "keep-alef-maqsura": { type: "boolean" },
     "keep-digits": { type: "boolean" },
+    "keep-lookalikes": { type: "boolean" },
+    "keep-invisible": { type: "boolean" },
+    "keep-presentation-forms": { type: "boolean" },
     hamza: { type: "boolean" },
     tokens: { type: "boolean" },
     "no-stopwords": { type: "boolean" },
@@ -49,6 +56,9 @@ const options: NormalizeOptions = {
   tehMarbuta: !values["keep-teh-marbuta"],
   alefMaqsura: !values["keep-alef-maqsura"],
   digits: !values["keep-digits"],
+  lookalikes: !values["keep-lookalikes"],
+  invisible: !values["keep-invisible"],
+  presentationForms: !values["keep-presentation-forms"],
   hamza: Boolean(values.hamza),
 };
 

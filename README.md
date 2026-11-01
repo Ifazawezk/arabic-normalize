@@ -30,16 +30,25 @@ npm install github:Ifazawezk/arabic-normalize
 
 | Step | Example | Option (default) |
 |---|---|---|
+| Remove invisible characters | RLM, LRM, ZWNJ, ZWJ, soft hyphens, bidi controls | `invisible: true` |
+| Expand presentation forms and ligatures | ﻣﺪﺭﺳﺔ → مدرسة, ﷲ → الله | `presentationForms: true` |
 | Remove harakat and Quranic marks | مُحَمَّد → محمد | `diacritics: true` |
 | Remove tatweel | مـــدرسة → مدرسة | `tatweel: true` |
 | Unify alef forms | أ إ آ ٱ → ا | `alef: true` |
+| Persian, Urdu and Kurdish look-alikes | ک → ك, ی → ي, ہ ھ ە → ه, ۃ → ة | `lookalikes: true` |
 | Teh marbuta to heh | مدرسة → مدرسه | `tehMarbuta: true` |
 | Alef maqsura to yeh | مستشفى → مستشفي | `alefMaqsura: true` |
 | Hamza on waw/yeh | مسؤول → مسوول | `hamza: false` |
-| Arabic-Indic and Persian digits | ٢٠٢٦ → 2026 | `digits: true` |
+| Arabic-Indic and Persian digits | ٢٠٢٦ → 2026, ٣٫١٤ → 3.14, ٥٠٪ → 50% | `digits: true` |
 | Collapse whitespace | | `whitespace: true` |
 
 Turn any step off by passing `false`, e.g. `normalize(text, { tehMarbuta: false })`.
+
+### Text that looks the same but is stored differently
+
+The first two steps and the look-alike step exist because real text does not arrive clean. A word copied from WhatsApp or a web page can carry an invisible right-to-left mark in the middle, PDF extraction often gives presentation forms instead of letters, and a Persian keyboard types ک and ی where an Arabic one types ك and ي. All of these look identical on screen and all of them fail a plain string comparison. `normalize()` also composes decomposed letters, so و followed by a combining hamza compares equal to ؤ.
+
+ZWNJ and ZWJ are removed only next to Arabic, so emoji sequences and other scripts that need them are left alone.
 
 ## API
 
