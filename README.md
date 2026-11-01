@@ -56,8 +56,8 @@ ZWNJ and ZWJ are removed only next to Arabic, so emoji sequences and other scrip
 - `includes(text, query, options?)`: true if `query` appears in `text` after normalizing both.
 - `findAll(text, query, options?)`: every match as `{ start, end, text }`, with positions in the **original** string, so you can highlight or slice it. It finds exactly what `includes()` finds. Matches never overlap, and a ligature such as ﷲ is always returned whole, even when the query is only part of it.
 - `highlight(text, query, before = "<mark>", after = "</mark>", options?)`: wraps every match.
-- `tokenize(text, { removeStopwords?, stripArticle?, minLength?, ...options })`: normalized words with punctuation removed. Latin words and numbers are kept, lowercased.
-- `stripArticle(word)`: removes ال and attached و ف ب ك ل (والكتاب → كتاب). At least 3 letters must remain, so الله and الي are left alone.
+- `tokenize(text, { removeStopwords?, stripArticle?, minLength?, ...options })`: normalized words with punctuation removed. Latin words and numbers are kept, lowercased. Stop words are found whichever normalization steps you turn off, and with `diacritics: false` words stay whole and `minLength` counts letters.
+- `stripArticle(word)`: removes ال and attached و ف ب ك ل (والكتاب → كتاب), with or without harakat (الْكِتَابُ → كِتَابُ). At least 3 letters must remain, so الله and اللهُ and الي are left alone.
 - `removeDiacritics(text)`, `toLatinDigits(text)`, `toArabicDigits(text)`.
 - `ARABIC_STOPWORDS`: the stop word set, in normalized form.
 
